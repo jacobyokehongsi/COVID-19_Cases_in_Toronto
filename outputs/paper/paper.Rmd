@@ -1,10 +1,10 @@
 ---
-title: "My title"
+title: "COVID-19 Cases in Toronto"
 subtitle: "My subtitle if needed"
 author: 
   - First author
   - Another author
-thanks: "Code and data are available at: LINK."
+thanks: "Code and data are available at: https://github.com/jacobyokehongsi/starter_folder-main."
 date: "`r format(Sys.time(), '%d %B %Y')`"
 abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
 output:
@@ -17,44 +17,49 @@ bibliography: references.bib
 knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
-library(palmerpenguins)
+library(janitor)
+library(knitr)
 ```
 
 # Introduction
 
-You can and should cross-reference sections and sub-sections. For instance, Section \@ref(data). R Markdown automatically makes the sections lower case and adds a dash to spaces to generate labels, for instance, Section \@ref(first-discussion-point). 
+first para: motivational and broad
+second para: what was done and what was found
+3rd para: implications
 
 
+The remainder of this paper is: Section \@ref(data) explains the data.
 
 # Data
 
-Our data is of penguins (Figure \@ref(fig:bills)).
+para or 2 introducing the dataset briefly
 
-```{r bills, fig.cap="Bills of penguins", echo = FALSE}
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = FALSE) +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
+then show extract of dataset using kable (Table \@ref(tab:testing))
+
+```{r testing}
+covid_data <- 
+  read_csv(here::here("inputs/data/covid_data.csv")) %>% 
+  clean_names()
+
+covid_data |>
+  select(age_group, neighbourhood_name, episode_date) |>
+  slice(1:10) |>
+  kable(
+    caption = "First ten rows of a dataset that shows age, neighbourhood and date",
+    col.names = c("Age Group", "Neighbourhood", "Episode Date"),
+    booktabs = TRUE, 
+    linesep = ""
+  )
 ```
+
+
+
 
 Talk more about it.
 
 Also bills and their average (Figure \@ref(fig:billssssss)). (Notice how you can change the height and width so they don't take the whole page?)
 
-```{r billssssss, fig.cap="More bills of penguins", echo = FALSE, fig.width=8, fig.height=4}
 
-# This needs to be about the random data tha tI sasmpled?
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = FALSE) +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
-```
 
 Talk way more about it. 
 
