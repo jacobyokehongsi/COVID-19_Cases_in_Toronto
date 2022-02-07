@@ -1,9 +1,8 @@
 ---
-title: "COVID-19 Cases in Toronto"
-subtitle: "My subtitle if needed"
+title: "Effects of Demographics and Geography of COVID-19 Cases in Toronto"
+subtitle: 
 author: 
-  - First author
-  - Another author
+  - Jacob Yoke Hong Si
 thanks: "Code and data are available at: https://github.com/jacobyokehongsi/starter_folder-main."
 date: "`r format(Sys.time(), '%d %B %Y')`"
 abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
@@ -23,85 +22,114 @@ library(knitr)
 
 # Introduction
 
-first para: motivational and broad
-second para: what was done and what was found
-3rd para: implications
+Since 2019, the global pandemic known as COVID-19 has affected the lives of Canadians and the world, leading to a recession in the economy, unemployment, poverty, hospitalizations and deaths. With recent COVID cases rising in Toronto, I hope to identify the location and age groups that are susceptible to COVID and curb its effect. A search on the National Center for Biotechnology Information and The New England Journal of Medicine yielded three research papers titled “The impact of vaccination on COVID-19 outbreaks in the United States” [@moghadas], the “Effect of Vaccination on Household Transmission of SARS-CoV-2 in England” [@harris] and the “Safety and Efficacy of the BNT162b2 mRNA Covid-19 Vaccine” [@polack]. These papers indicated that vaccination rates reduced the infection rate of COVID-19 in their samples. Furthermore, research [@yang] has also proved that implementing lockdown measures would help reduce the spread of COVID-19. Hence, I hope to highlight the part of the population that would benefit most from reducing the spread of COVID-19.
+
+In the paper, I will use the Covid cases in Toronto from the City of Toronto to explore the age groups and neighbourhoods that is impacted most by COVID-19. This will be done through first providing summary statistics of our dataset, then creating tables and plots that depicts the number of Covid cases with respect to the neighbourhoods in Toronto and age groups. This would provide us with a clear picture of the demographics and geography of Covid in Toronto.
 
 
-The remainder of this paper is: Section \@ref(data) explains the data.
+The remainder of this paper is structured as follows: Section \@ref(data) discusses the data.
 
 # Data
 
-para or 2 introducing the dataset briefly
+In order to analyse the data of Covid cases in Toronto over the pandemic such as the Covid Cases by Age Groups and Neighbourhoods, I obtained the COVID-19 Cases in Toronto dataset from the City of Toronto Open Data Portal using the `opendatatoronto` package. The data is collected by Toronto Public Health and contains demographical and geographical information regarding the covid outbreaks which was last updated on the 26th of January 2022. The data obtained contain age groups ranging from 19 and younger to 90 and older, as well as 140 different neighbourhoods in Toronto where Covid outbreaks occurred. Using the statistical programming language R [@citeR], as well as packages including `tidyverse` [@tidyverse], `ggplot2` [@ggplot2] and `janitor` [@janitor]. I conducted data cleansing and data visualisation to depict the data in appropriate tables and plots.
 
-then show extract of dataset using kable (Table \@ref(tab:testing))
+Starting with the raw data, I first conducted data cleansing by cleaning the names of the columns. I then selected columns in the dataset that are relevant to our analysis which includes the covid episode date, neighbourhood, age group and gender. Table \@ref(tab:datasummary) presents the data which outlines the variables I have selected. 
 
-```{r testing}
+```{r datasummary, echo = FALSE, message = FALSE, warning=FALSE}
 covid_data <- 
   read_csv(here::here("inputs/data/covid_data.csv")) %>% 
   clean_names()
 
 covid_data |>
-  select(age_group, neighbourhood_name, episode_date) |>
+  select(episode_date, neighbourhood_name, age_group, client_gender) |>
   slice(1:10) |>
   kable(
-    caption = "First ten rows of a dataset that shows age, neighbourhood and date",
-    col.names = c("Age Group", "Neighbourhood", "Episode Date"),
+    caption = "First ten rows of a dataset that shows date of episode, 
+    neighbourhood, age group and gender of an individual with Covid",
+    col.names = c("Episode Date", "Neighbourhood", "Age Group", "Gender"),
     booktabs = TRUE, 
     linesep = ""
   )
 ```
 
+As I investigate the relationship between the number of covid cases with the age groups and neighbourhoods, I grouped the data with respect to the these two variables and obtained a count for the covid cases. Lastly, since there are many neighbourhoods (140), I decided to select the ten neighbourhoods with the highest covid cases to conduct my analysis. Table \@ref(tab:agecovidsummary) represents the relationship between age groups and covid cases whereas Table \@ref(tab:neighbourcovidsummary) represents the relationship between neighbourhoods and covid cases.
 
 
+```{r agecovidsummary, echo=FALSE, warning=FALSE, message = FALSE}
+age_covid <- 
+  covid_data |> 
+  group_by(age_group) |>
+  na.omit() %>% 
+  count() 
 
-Talk more about it.
+age_covid %>% 
+  slice(1:10) |>
+  kable(
+    caption = "Number of Covid Cases in Different Age Groups",
+    col.names = c("Age Group", "Number of Covid Cases"),
+    booktabs = TRUE, 
+    linesep = ""
+  )
+```
 
-Also bills and their average (Figure \@ref(fig:billssssss)). (Notice how you can change the height and width so they don't take the whole page?)
+```{r neighbourcovidsummary, echo=FALSE, warning=FALSE, message = FALSE}
+neighbourhood_cases <- covid_data |>
+  group_by(neighbourhood_name) |>
+  count() %>%
+  na.omit() %>%
+  arrange(desc(n))
 
+neighbourhood_cases|>
+  head(10) %>%
+  kable(
+    caption = "Number of Covid Cases in Different Neighbourhoods",
+    col.names = c("Neighbourhood", "Number of Covid Cases"),
+    booktabs = TRUE,
+    linesep = ""
+  )
+```
+\newpage
+Utilizing the data, I will generate bar charts to depict the covid cases at different age groups and neighbourhood. 
 
+```{r agecov, fig.cap="Covid Cases amongst Age Groups in Toronto", echo=FALSE, warning=FALSE, message = FALSE, fig.height=4}
+age_covid |>
+  ggplot(mapping = aes(x = age_group, y=n, fill = age_group)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  labs(x = "Age Group",
+       y = "Number of Covid Cases",
+       title = "Covid Cases amongst Age Groups in Toronto",
+       caption = "Source: OpenDataToronto") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_discrete(name = "Age Group")
+```
 
-Talk way more about it. 
+Figure \@ref(fig:agecov) indicates that the age group between 20 to 29 Years have the highest number of covid cases whereas the age group between 90 and older to have the least. This would be due to the fact that despite covid restrictions, young adults are less wary of it and take lesser precautions against covid compared to the older adults. Additionally, the older population also tend to stay home compared to young adults, causing the young adults to be more susceptible to covid.
 
-
-
-# Model
-
-\begin{equation}
-Pr(\theta | y) = \frac{Pr(y | \theta) Pr(\theta)}{Pr(y)}  (\#eq:bayes)
-\end{equation}
-
-Equation \@ref(eq:bayes) seems useful, eh?
-
-Here's a dumb example of how to use some references: In paper we run our analysis in `R` [@citeR]. We also use the `tidyverse` which was written by @thereferencecanbewhatever If we were interested in baseball data then @citeLahman could be useful. 
-
-We can use maths by including latex between dollar signs, for instance $\theta$.
-
-
-# Results
-
-# Discussion
-
-## First discussion point
-
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
-
-## Second discussion point
-
-## Third discussion point
-
-## Weaknesses and next steps
-
-Weaknesses and next steps should also be included.
 
 \newpage
+```{r neighbourcovidfig, fig.cap="Covid Cases in different Toronto neighbourhoods", echo=FALSE, warning=FALSE, message = FALSE, fig.height=4}
+neighbourhood_cases |>
+  head(10) %>%
+  ggplot(mapping = aes(x = reorder(neighbourhood_name, -n), y=n, fill = neighbourhood_name)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  labs(x = "Neighbourhoods",
+       y = "Number of Covid Cases",
+       title = "Covid Cases in different Toronto neighbourhoods",
+       caption = "Source: OpenDataToronto") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_discrete(name = "Neighbourhoods") +
+  theme(legend.title = element_text(size = 6),
+               legend.text = element_text(size = 6))
+```
 
-\appendix
 
-# Appendix {-}
+On the other hand covid cases in the neighbourhoods depicted in Figure \@ref(fig:neighbourcovidfig) indicates the neighbourhoods with the most number of covid cases in Toronto. Neighbourhoods such as Woburn have total covid cases of up to approximately 6500 which is very high. Thus, in order to curb the effects of covid, we should enforce tighter restrictions in these areas to prevent further covid outbreaks.
 
 
-# Additional details
+
+
+
+
 
 
 \newpage
