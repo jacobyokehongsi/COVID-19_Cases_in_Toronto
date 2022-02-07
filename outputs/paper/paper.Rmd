@@ -3,9 +3,9 @@ title: "Effects of Demographics and Geography on COVID-19 Cases in Toronto"
 subtitle: 
 author: 
   - Jacob Yoke Hong Si
-thanks: "Code and data are available at: https://github.com/jacobyokehongsi/starter_folder-main."
+thanks: "Code and data are available at: https://github.com/jacobyokehongsi/COVID-19_Cases_in_Toronto."
 date: "`r format(Sys.time(), '%d %B %Y')`"
-abstract: Toronto COVID-19 data was obtained from the City of Toronto Open Portal to determine how different age groups and neighbourhoods in Toronto affected the number of COVID-19 cases. From our data analysis, we determined that there is an obvious difference in number of covid cases in these variables where specific age groups and neighbourhoods tend to have higher covid cases. With the information obtained, we could use it to implement tighter lockdown measures in these areas to curb the impact of Covid.
+abstract: Toronto COVID-19 data was obtained from the City of Toronto Open Portal to determine how different age groups and neighbourhoods in Toronto affected the number of COVID-19 cases. From our data analysis, we determined that there is an obvious difference in the number of covid cases in these variables where specific age groups and neighbourhoods tend to have higher covid cases. With the information obtained, we could use it to implement tighter lockdown measures in these areas to curb the impacts of Covid.
 
 output:
   bookdown::pdf_document2
@@ -32,7 +32,7 @@ The remainder of this paper is structured as follows: Section \@ref(data) discus
 
 # Data
 
-In order to analyse the data of Covid cases in Toronto over the pandemic such as the Covid Cases by Age Groups and Neighbourhoods, I obtained the COVID-19 Cases in Toronto dataset from the City of Toronto Open Data Portal using the `opendatatoronto` package. The data is collected by Toronto Public Health and contains demographical and geographical information regarding the covid outbreaks which was last updated on the 26th of January 2022. The data obtained contain age groups ranging from 19 and younger to 90 and older, as well as 140 different neighbourhoods in Toronto where Covid outbreaks occurred. Using the statistical programming language R [@citeR], as well as packages including `tidyverse` [@tidyverse], `ggplot2` [@ggplot2] and `janitor` [@janitor]. I conducted data cleansing and data visualisation to depict the data in appropriate tables and plots.
+In order to analyse the data of Covid cases in Toronto over the pandemic such as the Covid Cases by Age Groups and Neighbourhoods, I obtained the COVID-19 Cases in Toronto dataset from the City of Toronto Open Data Portal using the `opendatatoronto` package. The data is collected by Toronto Public Health and contains demographical and geographical information regarding the covid outbreaks which was last updated on the 26th of January 2022. A potential weakness of the source is that there could be individuals who contracted COVID but do not report to clinics or hospitals thus, leading to an underrepresentation of our data. This would also bias the data since we underestimate the number of people who contracted covid due to the unreported cases. The data obtained contain age groups ranging from 19 and younger to 90 and older, as well as 140 different neighbourhoods in Toronto where Covid outbreaks occurred. Using the statistical programming language R [@citeR], as well as packages including `tidyverse` [@tidyverse], `ggplot2` [@ggplot2] and `janitor` [@janitor]. I conducted data cleansing and data visualisation to depict the data in appropriate tables and plots.
 
 Starting with the raw data, I first conducted data cleansing by cleaning the names of the columns. I then selected columns in the dataset that are relevant to our analysis which includes the covid episode date, neighbourhood, age group and gender. Table \@ref(tab:datasummary) presents the data which outlines the variables I have selected. 
 
@@ -94,7 +94,7 @@ neighbourhood_cases|>
   )
 ```
 \newpage
-Utilizing the data, I will generate bar charts to depict the covid cases at different age groups and neighbourhood. 
+Utilizing the data, I will generate bar charts to depict the covid cases at different age groups and neighbourhoods. 
 
 ```{r agecov, fig.cap="Covid Cases amongst Age Groups in Toronto", echo=FALSE, warning=FALSE, message = FALSE, fig.height=4}
 # plotting a bar chart w.r.t. age and covid cases
