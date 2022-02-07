@@ -1,5 +1,5 @@
 ---
-title: "Effects of Demographics and Geography on COVID-19 Cases in Toronto"
+title: "Varying Demographics and Geography of the Toronto Population leads to differences of COVID-19 Cases in Toronto"
 subtitle: 
 author: 
   - Jacob Yoke Hong Si
