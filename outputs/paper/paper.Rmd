@@ -1,11 +1,12 @@
 ---
-title: "Effects of Demographics and Geography of COVID-19 Cases in Toronto"
+title: "Effects of Demographics and Geography on COVID-19 Cases in Toronto"
 subtitle: 
 author: 
   - Jacob Yoke Hong Si
 thanks: "Code and data are available at: https://github.com/jacobyokehongsi/starter_folder-main."
 date: "`r format(Sys.time(), '%d %B %Y')`"
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+abstract: Toronto COVID-19 data was obtained from the City of Toronto Open Portal to determine how different age groups and neighbourhoods in Toronto affected the number of COVID-19 cases. From our data analysis, we determined that there is an obvious difference in number of covid cases in these variables where specific age groups and neighbourhoods tend to have higher covid cases. With the information obtained, we could use it to implement tighter lockdown measures in these areas to curb the impact of Covid.
+
 output:
   bookdown::pdf_document2
 toc: FALSE
@@ -14,7 +15,7 @@ bibliography: references.bib
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-
+# loading packages
 library(tidyverse)
 library(janitor)
 library(knitr)
@@ -36,10 +37,12 @@ In order to analyse the data of Covid cases in Toronto over the pandemic such as
 Starting with the raw data, I first conducted data cleansing by cleaning the names of the columns. I then selected columns in the dataset that are relevant to our analysis which includes the covid episode date, neighbourhood, age group and gender. Table \@ref(tab:datasummary) presents the data which outlines the variables I have selected. 
 
 ```{r datasummary, echo = FALSE, message = FALSE, warning=FALSE}
+# reading in the data
 covid_data <- 
   read_csv(here::here("inputs/data/covid_data.csv")) %>% 
   clean_names()
 
+# selecting relevant columns
 covid_data |>
   select(episode_date, neighbourhood_name, age_group, client_gender) |>
   slice(1:10) |>
@@ -56,6 +59,7 @@ As I investigate the relationship between the number of covid cases with the age
 
 
 ```{r agecovidsummary, echo=FALSE, warning=FALSE, message = FALSE}
+# obtaining a covid cases count by age group and creating a table
 age_covid <- 
   covid_data |> 
   group_by(age_group) |>
@@ -73,6 +77,7 @@ age_covid %>%
 ```
 
 ```{r neighbourcovidsummary, echo=FALSE, warning=FALSE, message = FALSE}
+# obtaining a covid cases count by neighbourhood and creating a table
 neighbourhood_cases <- covid_data |>
   group_by(neighbourhood_name) |>
   count() %>%
@@ -92,6 +97,7 @@ neighbourhood_cases|>
 Utilizing the data, I will generate bar charts to depict the covid cases at different age groups and neighbourhood. 
 
 ```{r agecov, fig.cap="Covid Cases amongst Age Groups in Toronto", echo=FALSE, warning=FALSE, message = FALSE, fig.height=4}
+# plotting a bar chart w.r.t. age and covid cases
 age_covid |>
   ggplot(mapping = aes(x = age_group, y=n, fill = age_group)) +
   geom_bar(stat = "identity", position = position_dodge()) +
@@ -108,6 +114,7 @@ Figure \@ref(fig:agecov) indicates that the age group between 20 to 29 Years hav
 
 \newpage
 ```{r neighbourcovidfig, fig.cap="Covid Cases in different Toronto neighbourhoods", echo=FALSE, warning=FALSE, message = FALSE, fig.height=4}
+# plotting a bar chart w.r.t. neighbourhood and covid cases
 neighbourhood_cases |>
   head(10) %>%
   ggplot(mapping = aes(x = reorder(neighbourhood_name, -n), y=n, fill = neighbourhood_name)) +
@@ -124,12 +131,6 @@ neighbourhood_cases |>
 
 
 On the other hand covid cases in the neighbourhoods depicted in Figure \@ref(fig:neighbourcovidfig) indicates the neighbourhoods with the most number of covid cases in Toronto. Neighbourhoods such as Woburn have total covid cases of up to approximately 6500 which is very high. Thus, in order to curb the effects of covid, we should enforce tighter restrictions in these areas to prevent further covid outbreaks.
-
-
-
-
-
-
 
 
 \newpage
